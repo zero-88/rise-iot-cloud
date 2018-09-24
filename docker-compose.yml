@@ -12,3 +12,7 @@ services:
       - "1880:1880"
     volumes:
       - "nodered-data:/data"
+    environment:
+      - NODE_RED_USER=${NODE_RED_USER}
+      - NODE_RED_PASSWORD=${NODE_RED_PASSWORD}
+      - NODE_RED_PLAIN_PASSWORD=${NODE_RED_PLAIN_PASSWORD}

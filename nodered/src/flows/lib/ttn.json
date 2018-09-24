@@ -1,10 +1,4 @@
 [{
-  "id": "307c8950.c64406",
-  "type": "tab",
-  "label": "TTN",
-  "disabled": false,
-  "info": ""
-}, {
   "id": "1ba97105.d1e85f",
   "type": "debug",
   "z": "307c8950.c64406",
