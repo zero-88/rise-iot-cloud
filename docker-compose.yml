@@ -1,0 +1,14 @@
+version: '2'
+
+volumes:
+  nodered-data:
+
+services:
+  node_red:
+    build: ./nodered
+    restart: always
+    privileged: true
+    ports:
+      - "1880:1880"
+    volumes:
+      - "nodered-data:/data"

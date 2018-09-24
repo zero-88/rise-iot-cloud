@@ -1,0 +1,103 @@
+[{
+  "id": "f2b981a7.3d7fd",
+  "type": "debug",
+  "z": "1274f7b7.94a4e8",
+  "name": "",
+  "active": true,
+  "tosidebar": true,
+  "console": false,
+  "tostatus": true,
+  "complete": "payload",
+  "x": 640,
+  "y": 480,
+  "wires": []
+}, {
+  "id": "d01484e5.99c708",
+  "type": "function",
+  "z": "1274f7b7.94a4e8",
+  "name": "",
+  "func": "msg.payload.nodeId = \"EFGH5678\";\n\nvar precision = 100; // 2 decimals\nmsg.payload.temp = Math.floor(Math.random() * (25 * precision - 20 * precision) + 20 * precision) / (1*precision);\nmsg.payload.pressure = Math.floor(Math.random() * (4750 * precision - 4250 * precision) + 4250 * precision) / (1*precision);\nmsg.payload.humidity = Math.floor(Math.random() * (60 * precision - 40 * precision) + 40 * precision) / (1*precision);\nmsg.payload.light = Math.floor(Math.random() * (100 * precision - 10 * precision) + 10 * precision) / (1*precision);\nmsg.payload.co2 = Math.floor(Math.random() * (600 * precision - 400 * precision) + 400 * precision) / (1*precision);\nmsg.payload.voltage = Math.floor(Math.random() * (5 * precision - 3 * precision) + 3 * precision) / (1*precision);\n\nmsg.payload.timestamp = new Date().getTime();\nmsg.payload.timestring = new Date().toUTCString();\nreturn msg;",
+  "outputs": 1,
+  "noerr": 0,
+  "x": 370,
+  "y": 380,
+  "wires": [
+    ["301adeae.6480e2", "f2b981a7.3d7fd"]
+  ]
+}, {
+  "id": "9867d94c.4c7168",
+  "type": "function",
+  "z": "1274f7b7.94a4e8",
+  "name": "",
+  "func": "var precision = 100; // 2 decimals\nmsg.payload.temp = Math.floor(Math.random() * (25 * precision - 20 * precision) + 20 * precision) / (1*precision);\nmsg.payload.pressure = Math.floor(Math.random() * (4750 * precision - 4250 * precision) + 4250 * precision) / (1*precision);\nmsg.payload.humidity = Math.floor(Math.random() * (60 * precision - 40 * precision) + 40 * precision) / (1*precision);\nmsg.payload.light = Math.floor(Math.random() * (100 * precision - 10 * precision) + 10 * precision) / (1*precision);\nmsg.payload.co2 = Math.floor(Math.random() * (600 * precision - 400 * precision) + 400 * precision) / (1*precision);\nmsg.payload.voltage = Math.floor(Math.random() * (5 * precision - 3 * precision) + 3 * precision) / (1*precision);\n\nmsg.payload.timestamp = new Date().getTime();\nmsg.payload.timestring = new Date().toUTCString();\nreturn msg;",
+  "outputs": 1,
+  "noerr": 0,
+  "x": 360,
+  "y": 280,
+  "wires": [
+    ["301adeae.6480e2", "cc7da813.9b75b8"]
+  ]
+}, {
+  "id": "cc7da813.9b75b8",
+  "type": "debug",
+  "z": "1274f7b7.94a4e8",
+  "name": "",
+  "active": true,
+  "tosidebar": true,
+  "console": false,
+  "tostatus": true,
+  "complete": "payload",
+  "x": 640,
+  "y": 380,
+  "wires": []
+}, {
+  "id": "301adeae.6480e2",
+  "type": "mqtt out",
+  "z": "1274f7b7.94a4e8",
+  "name": "MQTT Push",
+  "topic": "rise-demo",
+  "qos": "0",
+  "retain": "false",
+  "broker": "29917383.cbfe5c",
+  "x": 650,
+  "y": 260,
+  "wires": []
+}, {
+  "id": "9f63c86a.93d968",
+  "type": "inject",
+  "z": "1274f7b7.94a4e8",
+  "name": "",
+  "topic": "",
+  "payload": "{\"nodeId\":\"ABCD1234\",\"orient\":0,\"temp\":20.58,\"pressure\":4304.7,\"humidity\":43,\"movement\":false,\"light\":0,\"voltage\":4.76,\"co2\":550,\"checksum\":\"0x76\",\"rssi\":-79,\"snr\":14.7,\"timestamp\":1529257096171,\"timestring\":\"Sun Jun 17 2018 17:38:16 GMT+0000 (UTC)\"}",
+  "payloadType": "json",
+  "repeat": "10",
+  "crontab": "",
+  "once": false,
+  "onceDelay": 0.1,
+  "x": 110,
+  "y": 260,
+  "wires": [
+    ["9867d94c.4c7168", "d01484e5.99c708"]
+  ]
+}, {
+  "id": "29917383.cbfe5c",
+  "type": "mqtt-broker",
+  "z": "",
+  "name": "CloudMQTT",
+  "broker": "",
+  "port": "",
+  "clientid": "",
+  "usetls": false,
+  "compatmode": true,
+  "keepalive": "60",
+  "cleansession": true,
+  "birthTopic": "",
+  "birthQos": "0",
+  "birthPayload": "",
+  "closeTopic": "",
+  "closeQos": "0",
+  "closePayload": "",
+  "willTopic": "",
+  "willQos": "0",
+  "willPayload": ""
+}]
