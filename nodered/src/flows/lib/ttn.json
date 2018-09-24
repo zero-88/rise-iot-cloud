@@ -1,194 +1,238 @@
-[{
-  "id": "1ba97105.d1e85f",
-  "type": "debug",
-  "z": "307c8950.c64406",
-  "name": "",
-  "active": true,
-  "tosidebar": true,
-  "console": true,
-  "tostatus": true,
-  "complete": "payload",
-  "x": 330,
-  "y": 400,
-  "wires": []
-}, {
-  "id": "23dcd7af.73b798",
-  "type": "function",
-  "z": "307c8950.c64406",
-  "name": "",
-  "func": "msg.payload.nodeId = msg.dev_id.toUpperCase();\nmsg.payload.counter = msg.counter;\nmsg.payload.metadata = msg.metadata;\nmsg.topic = 'bluecare/demo/' + msg.dev_id.toUpperCase() + '/probe';\nreturn msg;",
-  "outputs": 1,
-  "noerr": 0,
-  "x": 550,
-  "y": 160,
-  "wires": [
-    ["1d70516.b01e0af", "4061391a.76b708"]
-  ]
-}, {
-  "id": "83cabae2.018608",
-  "type": "function",
-  "z": "307c8950.c64406",
-  "name": "decoder",
-  "func": "var b = msg.payload;\n// first 5 bits check +/-\nif ((b[2] & 0xF8) !== 0)\n{\n    // negative\n    msg.payload = \"{ 'temp' : -1 }\";\n}\nelse\n{\n    // positive\n    //var integral = ((b[2] << 5) || (b[3] >> 4));\n    var integral = b[3] / 10;\n    var decimal = (b[2] & 0x0F) * 0.0625;\n    msg.payload = integral + decimal;\n    //msg.payload = \"{ 'temp' : \" + integral + \" }\";\n}\nreturn msg;",
-  "outputs": 1,
-  "noerr": 0,
-  "x": 340,
-  "y": 740,
-  "wires": [
-    []
-  ]
-}, {
-  "id": "d251b716.16bf58",
-  "type": "debug",
-  "z": "307c8950.c64406",
-  "name": "",
-  "active": true,
-  "tosidebar": true,
-  "console": true,
-  "tostatus": false,
-  "complete": "true",
-  "x": 420,
-  "y": 320,
-  "wires": []
-}, {
-  "id": "1d70516.b01e0af",
-  "type": "debug",
-  "z": "307c8950.c64406",
-  "name": "",
-  "active": true,
-  "tosidebar": true,
-  "console": true,
-  "tostatus": true,
-  "complete": "payload",
-  "x": 770,
-  "y": 160,
-  "wires": []
-}, {
-  "id": "ee3b2e87.87922",
-  "type": "debug",
-  "z": "307c8950.c64406",
-  "name": "",
-  "active": true,
-  "tosidebar": true,
-  "console": true,
-  "tostatus": true,
-  "complete": "payload",
-  "x": 520,
-  "y": 220,
-  "wires": []
-}, {
-  "id": "194eccf7.f7ec93",
-  "type": "inject",
-  "z": "307c8950.c64406",
-  "name": "",
-  "topic": "",
-  "payload": "",
-  "payloadType": "date",
-  "repeat": "5",
-  "crontab": "",
-  "once": true,
-  "onceDelay": 0.1,
-  "x": 170,
-  "y": 660,
-  "wires": [
-    ["c17159b2.fe9e78"]
-  ]
-}, {
-  "id": "4061391a.76b708",
-  "type": "mqtt out",
-  "z": "307c8950.c64406",
-  "name": "",
-  "topic": "",
-  "qos": "",
-  "retain": "",
-  "broker": "29917383.cbfe5c",
-  "x": 770,
-  "y": 240,
-  "wires": []
-}, {
-  "id": "2c8c976.90ff368",
-  "type": "debug",
-  "z": "307c8950.c64406",
-  "name": "",
-  "active": true,
-  "tosidebar": true,
-  "console": true,
-  "tostatus": true,
-  "complete": "dev_id",
-  "x": 480,
-  "y": 80,
-  "wires": []
-}, {
-  "id": "7adf7b1e.d43324",
-  "type": "ttn event",
-  "z": "307c8950.c64406",
-  "app": "1aa3e95f.b5e4a7",
-  "name": "",
-  "event": "#",
-  "dev_id": "",
-  "x": 160,
-  "y": 380,
-  "wires": [
-    ["1ba97105.d1e85f"]
-  ]
-}, {
-  "id": "c17159b2.fe9e78",
-  "type": "function",
-  "z": "307c8950.c64406",
-  "name": "decoder",
-  "func": "var b = new Buffer([0x0B,0x6C,0x18,0x01,0x00,0x00,0x20,0x00]);\n// first 5 bits check +/-\n\n//var integral = ((b[2] << 5) || (b[3] >> 4));\nvar integral = b[2];\nvar decimal = (b[3] & 0x0F) * 0.0625;\nmsg.payload = integral + decimal;\n    //msg.payload = \"{ 'temp' : \" + integral + \" }\";\n\nif ((b[2] & 0xF8) !== 0)\n{\n    // negative\n    msg.payload = msg.payload * -1;\n}\nreturn msg;",
-  "outputs": 1,
-  "noerr": 0,
-  "x": 340,
-  "y": 660,
-  "wires": [
-    ["24b8f72f.83f8a8"]
-  ]
-}, {
-  "id": "24b8f72f.83f8a8",
-  "type": "debug",
-  "z": "307c8950.c64406",
-  "name": "decoder test",
-  "active": false,
-  "tosidebar": true,
-  "console": true,
-  "tostatus": true,
-  "complete": "payload",
-  "x": 520,
-  "y": 660,
-  "wires": []
-}, {
-  "id": "82a93ab0.7f9c78",
-  "type": "ttn uplink",
-  "z": "307c8950.c64406",
-  "app": "1aa3e95f.b5e4a7",
-  "name": "rise-node-red-01",
-  "field": "",
-  "dev_id": "",
-  "x": 240,
-  "y": 180,
-  "wires": [
-    ["ee3b2e87.87922", "2c8c976.90ff368", "d251b716.16bf58", "23dcd7af.73b798"]
-  ]
-}, {
-  "id": "29917383.cbfe5c",
-  "type": "mqtt-broker",
-  "z": "",
-  "name": "CloudMQTT",
-  "broker": "",
-  "port": "",
-  "clientid": "",
-  "usetls": false,
-  "compatmode": true,
-  "keepalive": "60",
-  "cleansession": true,
-  "birthTopic": "",
-  "birthQos": "0",
-  "birthPayload": "",
-  "closeTopic": "",
-  "closeQos": "0",
-  "closePayload": "",
-  "willTopic": "",
-  "willQos": "0",
-  "willPayload": ""
-}]
+[
+  {
+      "id": "9c6edf8c.6fe0d",
+      "type": "tab",
+      "label": "TTN",
+      "disabled": false,
+      "info": ""
+  },
+  {
+      "id": "c0baf496.058448",
+      "type": "debug",
+      "z": "9c6edf8c.6fe0d",
+      "name": "",
+      "active": true,
+      "tosidebar": true,
+      "console": true,
+      "tostatus": true,
+      "complete": "payload",
+      "x": 340,
+      "y": 360,
+      "wires": []
+  },
+  {
+      "id": "875ff861.4ca9f8",
+      "type": "function",
+      "z": "9c6edf8c.6fe0d",
+      "name": "",
+      "func": "msg.payload.nodeId = msg.dev_id.toUpperCase();\nmsg.payload.counter = msg.counter;\nmsg.payload.metadata = msg.metadata;\nmsg.topic = 'bluecare/demo/' + msg.dev_id.toUpperCase() + '/probe';\nreturn msg;",
+      "outputs": 1,
+      "noerr": 0,
+      "x": 560,
+      "y": 120,
+      "wires": [
+          [
+              "433bef06.2960a",
+              "675ae630.720148"
+          ]
+      ]
+  },
+  {
+      "id": "9ed20cb7.be367",
+      "type": "function",
+      "z": "9c6edf8c.6fe0d",
+      "name": "decoder",
+      "func": "var b = msg.payload;\n// first 5 bits check +/-\nif ((b[2] & 0xF8) !== 0)\n{\n    // negative\n    msg.payload = \"{ 'temp' : -1 }\";\n}\nelse\n{\n    // positive\n    //var integral = ((b[2] << 5) || (b[3] >> 4));\n    var integral = b[3] / 10;\n    var decimal = (b[2] & 0x0F) * 0.0625;\n    msg.payload = integral + decimal;\n    //msg.payload = \"{ 'temp' : \" + integral + \" }\";\n}\nreturn msg;",
+      "outputs": 1,
+      "noerr": 0,
+      "x": 350,
+      "y": 700,
+      "wires": [
+          []
+      ]
+  },
+  {
+      "id": "5d4995d2.c0e15c",
+      "type": "debug",
+      "z": "9c6edf8c.6fe0d",
+      "name": "",
+      "active": true,
+      "tosidebar": true,
+      "console": true,
+      "tostatus": false,
+      "complete": "true",
+      "x": 430,
+      "y": 280,
+      "wires": []
+  },
+  {
+      "id": "433bef06.2960a",
+      "type": "debug",
+      "z": "9c6edf8c.6fe0d",
+      "name": "",
+      "active": true,
+      "tosidebar": true,
+      "console": true,
+      "tostatus": true,
+      "complete": "payload",
+      "x": 780,
+      "y": 120,
+      "wires": []
+  },
+  {
+      "id": "b9609767.3f8ce8",
+      "type": "debug",
+      "z": "9c6edf8c.6fe0d",
+      "name": "",
+      "active": true,
+      "tosidebar": true,
+      "console": true,
+      "tostatus": true,
+      "complete": "payload",
+      "x": 530,
+      "y": 180,
+      "wires": []
+  },
+  {
+      "id": "6713c5e9.55bd6c",
+      "type": "inject",
+      "z": "9c6edf8c.6fe0d",
+      "name": "",
+      "topic": "",
+      "payload": "",
+      "payloadType": "date",
+      "repeat": "5",
+      "crontab": "",
+      "once": true,
+      "onceDelay": 0.1,
+      "x": 180,
+      "y": 620,
+      "wires": [
+          [
+              "ce10dd82.97b4d"
+          ]
+      ]
+  },
+  {
+      "id": "675ae630.720148",
+      "type": "mqtt out",
+      "z": "9c6edf8c.6fe0d",
+      "name": "",
+      "topic": "",
+      "qos": "",
+      "retain": "",
+      "broker": "6d316517.55939c",
+      "x": 780,
+      "y": 200,
+      "wires": []
+  },
+  {
+      "id": "c1fe0c78.66fbd",
+      "type": "debug",
+      "z": "9c6edf8c.6fe0d",
+      "name": "",
+      "active": true,
+      "tosidebar": true,
+      "console": true,
+      "tostatus": true,
+      "complete": "dev_id",
+      "x": 490,
+      "y": 40,
+      "wires": []
+  },
+  {
+      "id": "d0951708.bfa268",
+      "type": "ttn event",
+      "z": "9c6edf8c.6fe0d",
+      "name": "",
+      "app": "5901c496.2d036c",
+      "dev_id": "",
+      "event": "#",
+      "x": 170,
+      "y": 340,
+      "wires": [
+          [
+              "c0baf496.058448"
+          ]
+      ]
+  },
+  {
+      "id": "ce10dd82.97b4d",
+      "type": "function",
+      "z": "9c6edf8c.6fe0d",
+      "name": "decoder",
+      "func": "var b = new Buffer([0x0B,0x6C,0x18,0x01,0x00,0x00,0x20,0x00]);\n// first 5 bits check +/-\n\n//var integral = ((b[2] << 5) || (b[3] >> 4));\nvar integral = b[2];\nvar decimal = (b[3] & 0x0F) * 0.0625;\nmsg.payload = integral + decimal;\n    //msg.payload = \"{ 'temp' : \" + integral + \" }\";\n\nif ((b[2] & 0xF8) !== 0)\n{\n    // negative\n    msg.payload = msg.payload * -1;\n}\nreturn msg;",
+      "outputs": 1,
+      "noerr": 0,
+      "x": 350,
+      "y": 620,
+      "wires": [
+          [
+              "1570f255.9f110e"
+          ]
+      ]
+  },
+  {
+      "id": "1570f255.9f110e",
+      "type": "debug",
+      "z": "9c6edf8c.6fe0d",
+      "name": "decoder test",
+      "active": false,
+      "tosidebar": true,
+      "console": true,
+      "tostatus": true,
+      "complete": "payload",
+      "x": 530,
+      "y": 620,
+      "wires": []
+  },
+  {
+      "id": "e2f98f3b.f338a",
+      "type": "ttn uplink",
+      "z": "9c6edf8c.6fe0d",
+      "name": "rise-node-red-01",
+      "app": "5901c496.2d036c",
+      "dev_id": "",
+      "field": "",
+      "x": 250,
+      "y": 140,
+      "wires": [
+          [
+              "b9609767.3f8ce8",
+              "c1fe0c78.66fbd",
+              "5d4995d2.c0e15c",
+              "875ff861.4ca9f8"
+          ]
+      ]
+  },
+  {
+      "id": "6d316517.55939c",
+      "type": "mqtt-broker",
+      "z": "",
+      "name": "CloudMQTT",
+      "broker": "",
+      "port": "",
+      "clientid": "",
+      "usetls": false,
+      "compatmode": true,
+      "keepalive": "60",
+      "cleansession": true,
+      "birthTopic": "",
+      "birthQos": "0",
+      "birthPayload": "",
+      "closeTopic": "",
+      "closeQos": "0",
+      "closePayload": "",
+      "willTopic": "",
+      "willQos": "0",
+      "willPayload": ""
+  },
+  {
+      "id": "5901c496.2d036c",
+      "type": "ttn app",
+      "z": "",
+      "appId": "bluecare-iot-01",
+      "accessKey": "",
+      "discovery": ""
+  }
+]
